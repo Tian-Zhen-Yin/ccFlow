@@ -4,7 +4,13 @@ import { getProjectBySlug, getProjects } from '@/lib/content'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import TechTag from '@/components/ui/TechTag'
 import ScrollReveal from '@/components/ui/ScrollReveal'
+import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
+
+const DemoEmbed = dynamic(() => import('@/components/projects/DemoEmbed'), {
+  ssr: false,
+  loading: () => <div className="h-[600px] bg-surface rounded-lg border border-border animate-pulse" />,
+})
 
 export const revalidate = 3600
 
@@ -82,6 +88,11 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               </a>
             )}
           </div>
+
+          {/* Demo Embed (Phase 2 — only for projects with demoEmbed: true) */}
+          {project.demoEmbed && project.demo && (
+            <DemoEmbed url={project.demo} title={project.title} />
+          )}
 
           <div className="border-t border-border pt-8">
             <MarkdownRenderer content={project.content} />

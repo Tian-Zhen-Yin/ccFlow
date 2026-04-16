@@ -1,7 +1,13 @@
+import Hero from '@/components/home/Hero'
+import FeaturedProjects from '@/components/home/FeaturedProjects'
+import LatestPosts from '@/components/home/LatestPosts'
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-[#6C63FF]">PangHu Portfolio</h1>
-    </main>
+    <>
+      <Hero />
+      <FeaturedProjects />
+      <LatestPosts />
+    </>
   )
 }

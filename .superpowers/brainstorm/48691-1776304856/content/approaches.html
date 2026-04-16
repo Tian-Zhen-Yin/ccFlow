@@ -1,0 +1,74 @@
+<h2>三种架构方案对比</h2>
+<p class="subtitle">基于你的需求：暗黑科技风 + 作品展示/博客并重 + 混合子项目 + 纯中文</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>方案 A：文档原版（推荐）</h3>
+      <p><strong>Next.js 14 App Router + Tailwind + 纯 Markdown</strong></p>
+      <p>严格按照 jiagou.md 架构，每个子项目独立仓库 + 独立 Vercel 部署。主站只通过链接跳转子项目。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>架构最简单，零耦合</li>
+          <li>子项目技术栈完全自由</li>
+          <li>部署互不影响</li>
+          <li>Claude Code 生成效率最高</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>跨项目导航体验弱（跳转外部域名）</li>
+          <li>无统一布局/导航共享</li>
+          <li>多仓库管理成本随项目增长</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>方案 B：Monorepo 统一管理</h3>
+      <p><strong>Next.js 14 + Turborepo/Monorepo + Markdown</strong></p>
+      <p>主站和所有子项目放在同一个 Monorepo 中，共享 UI 组件库和 Design Token，但各自独立部署到 Vercel。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>共享组件和设计系统</li>
+          <li>统一开发/构建流程</li>
+          <li>跨项目导航更一致</li>
+          <li>代码复用率高（暗黑主题组件）</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Monorepo 配置复杂度较高</li>
+          <li>子项目必须用兼容框架</li>
+          <li>构建时间随项目增长</li>
+          <li>对 Claude Code 不够友好（复杂目录结构）</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>方案 C：增强版独立部署（折中）</h3>
+      <p><strong>Next.js 14 + 独立仓库 + iframe 嵌入子项目</strong></p>
+      <p>保持独立仓库架构，但主站通过 iframe 或嵌套路由展示子项目 Demo，实现"站内体验"。子项目仍可独立访问。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>保持独立部署的灵活性</li>
+          <li>用户可在站内体验项目 Demo</li>
+          <li>子项目技术栈不受限</li>
+          <li>渐进增强，可按需实现</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>iframe 体验有一定限制（移动端、全屏等）</li>
+          <li>需要子项目配合 iframe 通信</li>
+          <li>SEO 不友好（Demo 页面）</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 2rem;">我的推荐：方案 A（文档原版）+ 方案 C 的渐进增强</h3>
+<p>先用方案 A 快速落地，等子项目多了再按需引入 iframe 嵌入。YAGNI 原则——不要过早优化。</p>

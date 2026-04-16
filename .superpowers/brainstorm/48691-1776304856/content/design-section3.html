@@ -1,0 +1,158 @@
+<h2>Section 3：内容结构 + 部署 + 子项目接入</h2>
+<p class="subtitle">ccFlow 作品集主站详细设计 — 第三部分</p>
+
+<div class="section">
+  <h3>3.1 Markdown 内容规范（增强版）</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">content/projects/*.md</div>
+      <div class="mockup-body" style="background: #0a0a0f; color: #e0e0e0; font-family: monospace; font-size: 12px; padding: 1rem; line-height: 1.6;">
+<pre style="margin:0;color:#e0e0e0;">
+---
+title: "胖虎宠物管家"
+slug: "panghu-pet"
+description: "Vue3 + Java 宠物健康管理应用"
+tech:
+  - Vue3
+  - Spring Boot
+  - Tailwind CSS
+status: "online"          # online | dev | archived
+featured: true            # 是否首页展示
+github: "https://github.com/xxx/panghu"
+demo: "https://panghu.vercel.app"
+demoEmbed: true           # 是否支持 iframe 嵌入
+image: "/images/panghu-cover.png"
+date: "2026-03-01"
+order: 1                  # 展示排序权重
+---
+
+## 项目背景
+胖虎是一款面向宠物主人的...
+
+## 技术亮点
+- 组件化设计系统...
+- AI 数据分析模块...</pre>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">content/blogs/*.md</div>
+      <div class="mockup-body" style="background: #0a0a0f; color: #e0e0e0; font-family: monospace; font-size: 12px; padding: 1rem; line-height: 1.6;">
+<pre style="margin:0;color:#e0e0e0;">
+---
+title: "用 Claude Code 搭建个人作品集"
+slug: "build-portfolio-with-claude"
+date: "2026-04-16"
+tags:
+  - Claude Code
+  - Next.js
+  - 个人品牌
+published: true           # 草稿控制
+excerpt: "探索如何用 AI 工具
+  驱动全流程开发..."
+coverImage: "/images/blog/cover-1.png"
+readingTime: 8            # 预估阅读分钟（可自动计算）
+---
+
+## 前言
+在 AI 时代，个人作品集不只是...</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>3.2 对比文档原版的 Frontmatter 增强</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="background: #1A1A2E; border-radius: 8px; padding: 16px; border: 1px solid #2A2A3E;">
+      <h4 style="color: #FF6B6B; margin: 0 0 12px;">文档原版字段</h4>
+      <div style="font-family: monospace; font-size: 13px; color: #aaa; line-height: 1.8;">
+        title, slug, description, tech,<br>github, demo, image (项目)<br>
+        title, slug, date, tags (博客)
+      </div>
+    </div>
+    <div style="background: #1A1A2E; border-radius: 8px; padding: 16px; border: 1px solid #00D9FF;">
+      <h4 style="color: #00D9FF; margin: 0 0 12px;">增强新增字段</h4>
+      <div style="font-family: monospace; font-size: 13px; color: #aaa; line-height: 1.8;">
+        status, featured, demoEmbed, order (项目)<br>
+        published, excerpt, coverImage, readingTime (博客)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>3.3 部署架构</h3>
+  <div class="mockup">
+    <div class="mockup-header">CI/CD 流程</div>
+    <div class="mockup-body" style="background: #0a0a0f; color: #e0e0e0; font-family: monospace; font-size: 13px; padding: 1.5rem; line-height: 1.6;">
+<pre style="margin:0;color:#e0e0e0;">
+ Claude Code 生成/修改
+        │
+        ▼
+ ┌──────────────┐
+ │  本地开发    │  npm run dev (localhost:3000)
+ └──────┬───────┘
+        │ git push
+        ▼
+ ┌──────────────┐
+ │   GitHub     │  repo: panghu-portfolio
+ └──────┬───────┘
+        │ webhook 自动触发
+        ▼
+ ┌──────────────┐
+ │   Vercel     │  自动构建 + 部署
+ │              │  ┌─ SSG 静态页面（首页/列表页）
+ │              │  ├─ ISR 增量生成（详情页，revalidate: 3600）
+ │              │  └─ Edge Functions（如需搜索等）
+ └──────┬───────┘
+        │
+        ▼
+ ┌──────────────┐
+ │  panghu.     │
+ │  vercel.app  │  自动 HTTPS + 全球 CDN
+ └──────────────┘
+
+子项目：各自独立 GitHub repo → 独立 Vercel 项目
+主站通过 demo URL 链接跳转 / iframe 嵌入
+</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>3.4 子项目接入规范（渐进增强）</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>Phase 1：链接跳转（立即）</h3>
+        <ul style="color: #ccc; font-size: 14px; line-height: 1.8;">
+          <li>项目卡片 → 外部 Demo 链接（新窗口打开）</li>
+          <li>项目详情页展示 Markdown 描述 + 截图</li>
+          <li>零额外成本，每个新项目只需加一个 .md 文件</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>Phase 2：iframe 嵌入（3+ 项目后）</h3>
+        <ul style="color: #ccc; font-size: 14px; line-height: 1.8;">
+          <li>项目详情页增加"在线体验"按钮</li>
+          <li>点击展开 DemoEmbed 组件（iframe 全屏/半屏）</li>
+          <li>子项目需支持 X-Frame-Options 允许嵌入</li>
+          <li>frontmatter 中 demoEmbed: true 控制是否启用</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>Phase 3：可选增强（未来）</h3>
+        <ul style="color: #ccc; font-size: 14px; line-height: 1.8;">
+          <li>站点内搜索（flexsearch / pagefind）</li>
+          <li>RSS 订阅（博客）</li>
+          <li>Giscus 评论系统（GitHub Discussions）</li>
+          <li>访客统计（Vercel Analytics）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

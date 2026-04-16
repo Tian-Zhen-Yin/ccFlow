@@ -1,0 +1,134 @@
+<h2>Section 2：目录结构 + 组件架构</h2>
+<p class="subtitle">ccFlow 作品集主站详细设计 — 第二部分</p>
+
+<div class="section">
+  <h3>2.1 目录结构（基于文档增强）</h3>
+  <div class="mockup">
+    <div class="mockup-header">panghu-portfolio/ 目录树</div>
+    <div class="mockup-body" style="background: #0a0a0f; color: #e0e0e0; font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 1.5rem; line-height: 1.7;">
+<pre style="margin:0;color:#e0e0e0;">
+panghu-portfolio/
+├── app/                          # Next.js 14 App Router
+│   ├── layout.tsx                # 全局布局（导航 + 页脚 + 暗黑主题）
+│   ├── page.tsx                  # 首页 Hero + 精选项目 + 最新博客
+│   ├── globals.css               # Design Token + Tailwind 暗黑变量
+│   ├── blog/
+│   │   ├── page.tsx              # 博客列表页（按日期排序）
+│   │   └── [slug]/
+│   │       └── page.tsx          # 博客详情页（Markdown 渲染）
+│   ├── projects/
+│   │   ├── page.tsx              # 作品列表页（卡片网格）
+│   │   └── [slug]/
+│   │       └── page.tsx          # 作品详情 + Demo 嵌入区
+│   └── about/
+│       └── page.tsx              # 关于页（个人介绍 + 技能栈）
+│
+├── components/                   # UI 组件
+│   ├── layout/
+│   │   ├── Navbar.tsx            # 顶部导航（固定 + 毛玻璃效果）
+│   │   └── Footer.tsx            # 页脚（社交链接 + 版权）
+│   ├── home/
+│   │   ├── Hero.tsx              # 首屏 Hero（粒子 + 打字机标语）
+│   │   ├── FeaturedProjects.tsx  # 精选作品展示
+│   │   └── LatestPosts.tsx       # 最新博客预览
+│   ├── projects/
+│   │   ├── ProjectCard.tsx       # 项目卡片（glow 悬停效果）
+│   │   ├── ProjectGrid.tsx       # 项目网格布局
+│   │   └── DemoEmbed.tsx         # iframe 嵌入组件（渐进增强）
+│   ├── blog/
+│   │   ├── PostCard.tsx          # 博客卡片
+│   │   ├── PostList.tsx          # 博客列表
+│   │   └── MarkdownRenderer.tsx  # MD 渲染器（代码高亮 + 目录）
+│   └── ui/
+│       ├── GlowCard.tsx          # 通用发光卡片
+│       ├── TechTag.tsx           # 技术标签（shimmer 动效）
+│       ├── SectionHeading.tsx    # 统一章节标题
+│       └── ScrollReveal.tsx      # 滚动动画包装器
+│
+├── content/                      # Markdown 内容
+│   ├── projects/                 # 项目描述 *.md
+│   └── blogs/                    # 博客文章 *.md
+│
+├── lib/                          # 工具函数
+│   ├── markdown.ts               # Markdown 解析（gray-matter + remark）
+│   ├── content.ts                # 内容读取（getProjects / getBlogs）
+│   └── constants.ts              # 站点配置常量
+│
+├── public/                       # 静态资源
+│   ├── images/                   # 项目截图、OG 图片
+│   └── fonts/                    # 字体文件（如需本地加载）
+│
+├── tailwind.config.ts            # Tailwind 配置（暗黑 token）
+├── next.config.ts                # Next.js 配置
+├── package.json
+└── vercel.json                   # Vercel 部署配置
+</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>2.2 核心组件架构</h3>
+  <div class="mockup">
+    <div class="mockup-header">组件依赖关系</div>
+    <div class="mockup-body" style="background: #0a0a0f; color: #e0e0e0; font-family: monospace; font-size: 13px; padding: 1.5rem; line-height: 1.6;">
+<pre style="margin:0;color:#e0e0e0;">
+layout.tsx
+├── Navbar (fixed, backdrop-blur)
+│   └── Logo + NavLinks + ThemeIndicator
+├── {children} ← 各页面
+│   │
+│   ├── page.tsx (首页)
+│   │   ├── Hero (粒子Canvas + Typewriter)
+│   │   ├── FeaturedProjects → ProjectCard[] → GlowCard + TechTag[]
+│   │   └── LatestPosts → PostCard[]
+│   │
+│   ├── projects/page.tsx (作品列表)
+│   │   └── ProjectGrid → ProjectCard[]
+│   │
+│   ├── projects/[slug]/page.tsx (作品详情)
+│   │   ├── MarkdownRenderer (MDXContent)
+│   │   ├── DemoEmbed (iframe, 可选)
+│   │   └── TechTag[]
+│   │
+│   ├── blog/page.tsx (博客列表)
+│   │   └── PostList → PostCard[]
+│   │
+│   └── blog/[slug]/page.tsx (博客详情)
+│       └── MarkdownRenderer (MDXContent + TOC)
+│
+└── Footer (社交链接 + GitHub + 版权)
+</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>2.3 关键技术决策</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>Markdown 解析链</h3>
+        <ul style="color: #ccc; font-size: 14px; line-height: 1.8;">
+          <li><strong>gray-matter：</strong>提取 frontmatter 元数据</li>
+          <li><strong>remark / rehype：</strong>Markdown → HTML 转换</li>
+          <li><strong>rehype-highlight：</strong>代码块语法高亮</li>
+          <li><strong>remark-toc：</strong>自动生成目录（博客）</li>
+          <li><strong>策略：</strong>构建时静态生成 (SSG)，零运行时开销</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>性能策略</h3>
+        <ul style="color: #ccc; font-size: 14px; line-height: 1.8;">
+          <li><strong>ISR：</strong>博客/项目页按需增量再生成</li>
+          <li><strong>图片：</strong>next/image 自动 WebP + 懒加载</li>
+          <li><strong>字体：</strong>next/font 零布局偏移</li>
+          <li><strong>粒子：</strong>Canvas 检测 prefers-reduced-motion</li>
+          <li><strong>Bundle：</strong>动态 import DemoEmbed（按需加载）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

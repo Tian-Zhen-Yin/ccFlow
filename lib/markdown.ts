@@ -5,6 +5,7 @@ import remarkRehype from 'remark-rehype'
 import rehypeSlug from 'rehype-slug'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
+import remarkMermaid from './remark-mermaid'
 import type { Heading } from './types'
 
 interface ParseResult {
@@ -17,6 +18,7 @@ export async function parseMarkdown(raw: string): Promise<ParseResult> {
 
   const processor = unified()
     .use(remarkParse)
+    .use(remarkMermaid)
     .use(remarkRehype)
     .use(rehypeSlug)
     .use(rehypeHighlight)

@@ -38,15 +38,14 @@ export default function AboutPage() {
         <ScrollReveal>
           <div className="bg-surface rounded-xl border border-border p-8 mb-12">
             <p className="text-text-secondary text-lg leading-relaxed">
-              你好，我是 PangHu — 一名热爱技术的开发者。
+              你好，我是 PangHu，一名热爱技术的开发者。
             </p>
             <p className="text-text-secondary text-lg leading-relaxed mt-4">
-              我相信代码可以改变世界。通过 Claude Code 等 AI 工具的辅助，
-              我能够更高效地将创意转化为现实。这个网站就是我工作成果的展示窗口。
+              我以兴趣为驱动，借助 Claude Code 等 AI 工具高效落地创意。
             </p>
             <p className="text-text-secondary text-lg leading-relaxed mt-4">
-              每个子项目都是独立开发、独立部署的完整应用。
-              从前端到后端，从 AI 工具到 DevOps，我追求全栈能力的全面发展。
+              这个网站展示了我独立开发、独立部署的各类完整应用，
+              从全栈开发到 DevOps，持续打磨 AI 产品开发能力。
             </p>
           </div>
         </ScrollReveal>

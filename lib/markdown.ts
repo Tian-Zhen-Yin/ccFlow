@@ -19,10 +19,10 @@ export async function parseMarkdown(raw: string): Promise<ParseResult> {
   const processor = unified()
     .use(remarkParse)
     .use(remarkMermaid)
-    .use(remarkRehype)
+    .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSlug)
     .use(rehypeHighlight)
-    .use(rehypeStringify)
+    .use(rehypeStringify, { allowDangerousHtml: true })
 
   const file = await processor.process(content)
   const html = String(file)

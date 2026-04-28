@@ -78,11 +78,11 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
               </ul>
             </nav>
           )}
-
-          <div className="border-t border-border pt-8">
-            <MarkdownRenderer content={blog.content} />
-          </div>
         </ScrollReveal>
+
+        <div className="border-t border-border pt-8">
+          <MarkdownRenderer content={blog.content} />
+        </div>
       </div>
     </article>
   )

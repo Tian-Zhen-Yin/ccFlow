@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "mermaid:build": "node scripts/mermaid-to-svg.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -25,6 +26,7 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.15.0",
     "@tailwindcss/typography": "^0.5.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^16.0.0",

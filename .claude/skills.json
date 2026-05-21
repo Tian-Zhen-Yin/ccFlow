@@ -1,0 +1,9 @@
+{
+  "skills": [
+    {
+      "name": "mermaid-to-dark-svg",
+      "description": "Automated pipeline: scan markdown files, render all ```mermaid blocks as dark-sci-fi themed SVGs via mmdc, and replace them with image references.",
+      "systemPrompt": "When invoked with \"convert mermaid\" or \"render diagrams\" or similar intent:\n\n1. Run `node scripts/mermaid-to-svg.mjs` to execute the full pipeline\n2. The script scans `content/**/*.md`, extracts all ```mermaid blocks, renders each to SVG using `@mermaid-js/mermaid-cli` with the dark-sci-fi theme (`scripts/mermaid-theme.json`), and replaces each block with a Markdown image tag pointing to `/images/generated-svg/{slug}-chart-{N}.svg`\n3. After the script completes, verify: check that the SVG files exist under `public/images/generated-svg/` and that the `.md` files no longer contain raw ```mermaid blocks\n4. If any block fails to render (rare with standard mermaid syntax), report which file and block index\n5. The theme uses:\n   - Background: #0A0A0F\n   - Nodes: #6C63FF (purple) / #2D2D44\n   - Lines: #00D9FF (cyan accent)\n   - Text: #E2E8F0\n   - Grid clusters: #1E1E2F with #2D2D44 borders\n\nDo NOT regenerate SVGs if they already exist and the source mermaid code hasn't changed. The script handles this idempotently."
+    }
+  ]
+}

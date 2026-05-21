@@ -15,19 +15,51 @@
     "titleColor": "#E2E8F0",
     "edgeLabelBackground": "#1E1E2F",
     "edgeLabelColor": "#E2E8F0",
-    "background": "#0A0A0F"
+    "background": "#0A0A0F",
+    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "fontSize": "14px",
+    "actorBkg": "#1E1E2F",
+    "actorTextColor": "#E2E8F0",
+    "actorBorder": "#6C63FF",
+    "signalColor": "#00D9FF",
+    "signalTextColor": "#E2E8F0",
+    "labelBoxBkg": "#2D2D44",
+    "labelBoxBorder": "#6C63FF",
+    "labelTextColor": "#E2E8F0",
+    "loopTextColor": "#00D9FF",
+    "loopTextColor": "#00D9FF",
+    "noteBkgColor": "#2D2D44",
+    "noteTextColor": "#E2E8F0",
+    "noteBorderColor": "#6C63FF",
+    "sectionBkgColor": "#1A1A2E",
+    "sectionBkgColor2": "#1E1E2F",
+    "excludeRandoms": true,
+    "pieTitleTextSize": "18px",
+    "pieTitleTextColor": "#E2E8F0",
+    "pieSectionTextSize": "14px",
+    "pieLegendTextSize": "14px",
+    "pieStrokeColor": "#2D2D44",
+    "pieOpacity": "0.9"
   },
   "flowchart": {
     "htmlLabels": true,
-    "padding": 20,
-    "nodeSpacing": 80,
-    "rankSpacing": 80
+    "padding": 24,
+    "nodeSpacing": 100,
+    "rankSpacing": 100,
+    "curve": "basis",
+    "useMaxWidth": true
   },
   "sequence": {
     "actorFontSize": 14,
     "actorFontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "actorFontWeight": 500,
     "noteFontSize": 13,
-    "messageFontSize": 13
+    "noteFontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "messageFontSize": 13,
+    "messageFontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "bottomMarginAdj": 10,
+    "boxMargin": 12,
+    "boxTextMargin": 6
   },
   "class": {
     "hideEmptyMembersBox": false

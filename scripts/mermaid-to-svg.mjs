@@ -14,6 +14,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 import matter from 'gray-matter';
+import { optimize as optimizeSvg } from 'svgo';
+import svgoConfig from './svgo.config.mjs';
+import { enhanceSvg } from './svg-enhancer.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -107,6 +110,19 @@ async function run() {
 
       try {
         execSync(cmd, { stdio: 'pipe', cwd: ROOT, timeout: 30000 });
+
+        // Post-process: inject cyber grid, glow filters, enhance fonts
+        const rendered = fs.readFileSync(outputPath, 'utf8');
+        const enhanced = enhanceSvg(rendered);
+        fs.writeFileSync(outputPath, enhanced, 'utf8');
+
+        // SVGO optimization
+        const optimized = optimizeSvg(
+          fs.readFileSync(outputPath, 'utf8'),
+          { ...svgoConfig, path: outputPath },
+        );
+        fs.writeFileSync(outputPath, optimized.data, 'utf8');
+
         console.log(`  ✓ ${filename}`);
         totalConverted++;
       } catch (err) {

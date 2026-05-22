@@ -9,7 +9,10 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "mermaid:build": "node scripts/mermaid-to-svg.mjs"
+    "mermaid:build": "node scripts/mermaid-to-svg.mjs",
+    "scaffold": "node scripts/scaffold.mjs",
+    "blog:create": "node scripts/blog-create.mjs",
+    "blog:publish": "node scripts/blog-publish.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

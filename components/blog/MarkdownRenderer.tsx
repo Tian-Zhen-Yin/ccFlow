@@ -49,6 +49,9 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
         prose-strong:text-text-primary
         prose-li:text-text-secondary
         prose-blockquote:border-primary prose-blockquote:text-text-secondary
+        prose-table:w-full prose-table:border-collapse
+        prose-th:bg-surface prose-th:text-text-primary prose-th:border prose-th:border-border prose-th:p-3 prose-th:text-left
+        prose-td:text-text-secondary prose-td:border prose-td:border-border prose-td:p-3
         [&_.mermaid]:bg-surface [&_.mermaid]:rounded-lg [&_.mermaid]:p-4 [&_.mermaid]:my-6 [&_.mermaid_svg]:max-w-full"
       dangerouslySetInnerHTML={{ __html: content }}
     />

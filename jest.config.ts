@@ -12,7 +12,7 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!unified|remark-parse|remark-rehype|rehype-slug|rehype-highlight|rehype-stringify|bail|is-plain-obj|trough|vfile|vfile-message|unist-util-|mdast-util-|hast-util-|micromark|micromark-|decode-named-character-reference|character-entities|character-entities-html4|character-entities-legacy|property-information|space-separated-tokens|comma-separated-tokens|web-namespaces|zwitch|ccount|escape-string-regexp|stringify-entities|trim-lines|longest-streak|html-void-elements|html-whitespace-sensitive-tagging|github-slugger|devlop|lowlight|parse-entities)',
+    '/node_modules/(?!unified|remark-gfm|remark-parse|remark-rehype|rehype-slug|rehype-highlight|rehype-stringify|bail|is-plain-obj|trough|vfile|vfile-message|unist-util-|mdast-util-|hast-util-|micromark|micromark-|decode-named-character-reference|character-entities|character-entities-html4|character-entities-legacy|property-information|space-separated-tokens|comma-separated-tokens|web-namespaces|zwitch|ccount|escape-string-regexp|stringify-entities|trim-lines|longest-streak|html-void-elements|html-whitespace-sensitive-tagging|github-slugger|devlop|lowlight|markdown-table|parse-entities)',
   ],
 }
 

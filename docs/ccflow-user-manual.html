@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ccFlow 使用说明书</title>
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --accent: #00D9FF;
+      --bg: #0A0A0F;
+      --surface: #1A1A2E;
+      --surface-light: #252542;
+      --text: #E8E8ED;
+      --text-muted: #9999AA;
+      --success: #4ADE80;
+      --error: #F87171;
+      --warning: #FBBF24;
+      --code-bg: #16162A;
+      --border: #2E2E4A;
+      --glow: 0 0 20px rgba(108, 99, 255, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Navigation ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+
+    .sidebar-logo {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-logo h2 {
+      font-size: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-logo p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .sidebar nav a {
+      display: block;
+      padding: 8px 24px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: var(--text);
+      background: rgba(108, 99, 255, 0.1);
+      border-left-color: var(--primary);
+    }
+
+    .sidebar nav a.level-2 {
+      padding-left: 40px;
+      font-size: 13px;
+    }
+
+    /* ── Main Content ── */
+    .main {
+      margin-left: 280px;
+      padding: 40px 60px 80px;
+      max-width: 960px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero .tagline {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 20px;
+      border: 1px solid var(--primary);
+      border-radius: 100px;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    /* ── Sections ── */
+    .section {
+      margin-top: 60px;
+    }
+
+    .section h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: var(--text);
+      position: relative;
+      padding-bottom: 12px;
+    }
+
+    .section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 2px;
+    }
+
+    .section h3 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: var(--text);
+    }
+
+    .section h4 {
+      font-size: 16px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .section ul, .section ol {
+      margin: 12px 0 16px 24px;
+    }
+
+    .section li {
+      margin-bottom: 8px;
+    }
+
+    /* ── Code Blocks ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+      position: relative;
+    }
+
+    pre code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #C9D1D9;
+    }
+
+    .code-label {
+      position: absolute;
+      top: 8px; right: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--surface);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+    }
+
+    /* ── Info Boxes ── */
+    .info-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      border-left: 4px solid;
+    }
+
+    .info-box.tip { background: rgba(108, 99, 255, 0.1); border-color: var(--primary); }
+    .info-box.warn { background: rgba(251, 191, 36, 0.1); border-color: var(--warning); }
+    .info-box.danger { background: rgba(248, 113, 113, 0.1); border-color: var(--error); }
+    .info-box.success { background: rgba(74, 222, 128, 0.1); border-color: var(--success); }
+
+    .info-box strong { display: block; margin-bottom: 4px; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface);
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--primary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover td { background: rgba(108, 99, 255, 0.05); }
+
+    /* ── Interactive Demo ── */
+    .demo {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: var(--glow);
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--surface-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-header .dots { display: flex; gap: 6px; }
+    .demo-header .dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-header .dots span:nth-child(1) { background: #FF5F57; }
+    .demo-header .dots span:nth-child(2) { background: #FEBC2E; }
+    .demo-header .dots span:nth-child(3) { background: #28C840; }
+    .demo-header .title { font-size: 12px; color: var(--text-muted); }
+
+    .demo-body { padding: 24px; }
+
+    .terminal {
+      background: #0D0D1A;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .terminal .prompt { color: var(--success); }
+    .terminal .cmd { color: var(--text); }
+    .terminal .output { color: var(--text-muted); }
+    .terminal .success { color: var(--success); }
+    .terminal .error { color: var(--error); }
+    .terminal .accent { color: var(--accent); }
+    .terminal .comment { color: #6A9955; }
+
+    .terminal .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--primary);
+      animation: blink 1s infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    /* ── Tab System ── */
+    .tab-group {
+      display: flex;
+      gap: 4px;
+      margin: 16px 0;
+      background: var(--code-bg);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 16px;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active { background: var(--primary); color: white; }
+    .tab-btn:hover:not(.active) { color: var(--text); background: rgba(108, 99, 255, 0.15); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Flow Diagram ── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 24px;
+      text-align: center;
+      min-width: 280px;
+    }
+
+    .flow-step.highlight { border-color: var(--primary); box-shadow: var(--glow); }
+
+    .flow-step .step-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+    .flow-step .step-desc { font-size: 12px; color: var(--text-muted); }
+
+    .flow-arrow {
+      width: 2px;
+      height: 24px;
+      background: var(--primary);
+      position: relative;
+    }
+
+    .flow-arrow::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: -4px;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--primary);
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge.cli { background: rgba(0, 217, 255, 0.15); color: var(--accent); }
+    .badge.template { background: rgba(108, 99, 255, 0.15); color: var(--primary); }
+
+    /* ── File Tree ── */
+    .file-tree {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin: 12px 0;
+    }
+
+    .file-tree .dir { color: var(--accent); }
+    .file-tree .file { color: var(--text-muted); }
+    .file-tree .highlight { color: var(--success); font-weight: 600; }
+
+    /* ── Interactive Slug Demo ── */
+    .slug-demo { display: flex; flex-direction: column; gap: 12px; }
+
+    .slug-demo input {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .slug-demo input:focus { border-color: var(--primary); }
+
+    .slug-demo .result {
+      background: var(--code-bg);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    .slug-demo .result .arrow { color: var(--primary); margin: 0 12px; }
+    .slug-demo .result .output { color: var(--success); font-weight: 600; }
+
+    /* ── Accordion ── */
+    .accordion {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .accordion-item { border-bottom: 1px solid var(--border); }
+    .accordion-item:last-child { border-bottom: none; }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      cursor: pointer;
+      background: var(--surface);
+      transition: background 0.2s;
+      user-select: none;
+    }
+
+    .accordion-header:hover { background: var(--surface-light); }
+
+    .accordion-header .icon {
+      transition: transform 0.3s;
+      color: var(--primary);
+    }
+
+    .accordion-item.open .accordion-header .icon { transform: rotate(180deg); }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: var(--code-bg);
+    }
+
+    .accordion-item.open .accordion-body { max-height: 600px; }
+    .accordion-body-inner { padding: 16px 20px; }
+
+    /* ── Form Components ── */
+    .scaffold-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .scaffold-form label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .scaffold-form input,
+    .scaffold-form select {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .scaffold-form select { cursor: pointer; }
+    .scaffold-form input:focus, .scaffold-form select:focus { border-color: var(--primary); }
+    .scaffold-form .full-width { grid-column: 1 / -1; }
+
+    .scaffold-output {
+      margin-top: 16px;
+      padding: 16px;
+      background: #0D0D1A;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre;
+      display: none;
+    }
+
+    .scaffold-output.visible { display: block; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #8B7FFF);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* ── Workflow Cards ── */
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .workflow-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .workflow-card:hover { border-color: var(--primary); box-shadow: var(--glow); }
+
+    .workflow-card .num {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .workflow-card h4 { color: var(--text); font-size: 15px; margin-bottom: 8px; }
+    .workflow-card p { color: var(--text-muted); font-size: 13px; margin: 0; }
+
+    /* ── Architecture Diagram ── */
+    .arch-diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .arch-layer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 8px auto;
+      max-width: 600px;
+    }
+
+    .arch-layer.prompt { border-color: var(--success); }
+    .arch-layer.execute { border-color: var(--primary); }
+    .arch-layer.deploy { border-color: var(--accent); }
+
+    .arch-layer .layer-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .arch-layer.prompt .layer-label { color: var(--success); }
+    .arch-layer.execute .layer-label { color: var(--primary); }
+    .arch-layer.deploy .layer-label { color: var(--accent); }
+
+    .arch-items { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+    .arch-item {
+      background: var(--surface-light);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .arch-arrow { color: var(--primary); font-size: 20px; margin: 4px 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 20px; }
+      .mobile-toggle { display: block !important; }
+    }
+
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 16px; left: 16px;
+      z-index: 200;
+      background: var(--primary);
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      color: white;
+      font-size: 20px;
+    }
+
+    /* ── Scroll to Top ── */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      width: 44px; height: 44px;
+      background: var(--primary);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 50;
+    }
+
+    .scroll-top.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>ccFlow</h2>
+    <p>Claude Code 工作流引擎 · 使用说明书</p>
+  </div>
+  <nav>
+    <a href="#overview" class="active">项目概览</a>
+    <a href="#architecture" class="level-2">系统架构</a>
+    <a href="#tech-stack" class="level-2">技术栈</a>
+    <a href="#quick-start">快速开始</a>
+    <a href="#website-guide" class="level-2">网站功能导航</a>
+    <a href="#scaffold">脚手架命令</a>
+    <a href="#scaffold-usage" class="level-2">基本用法</a>
+    <a href="#scaffold-templates" class="level-2">模板详解</a>
+    <a href="#scaffold-demo" class="level-2">交互演示</a>
+    <a href="#blog-create">AI 博客创建</a>
+    <a href="#blog-create-workflow" class="level-2">工作流详解</a>
+    <a href="#blog-create-demo" class="level-2">交互演示</a>
+    <a href="#blog-publish">草稿发布</a>
+    <a href="#blog-publish-demo" class="level-2">交互演示</a>
+    <a href="#slug-system">Slug 生成系统</a>
+    <a href="#slug-demo" class="level-2">交互演示</a>
+    <a href="#content-system">内容管理</a>
+    <a href="#git-workflow">Git 工作流</a>
+    <a href="#mermaid">Mermaid 图表</a>
+    <a href="#testing">测试与构建</a>
+    <a href="#deployment">部署</a>
+    <a href="#faq">常见问题</a>
+    <a href="#cli-ref">命令速查表</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" id="overview">
+    <h1>ccFlow 使用说明书</h1>
+    <p>基于 Claude Code 驱动的自动化工作流引擎 —— 从需求到部署的全流程</p>
+    <span class="tagline">Markdown 驱动 · 零数据库 · 全自动部署</span>
+  </section>
+
+  <!-- ═══ ARCHITECTURE ═══ -->
+  <section class="section" id="architecture">
+    <h2>系统架构</h2>
+    <p>ccFlow 采用三层架构设计，以 Claude Code 为核心执行层，实现从代码生成到自动部署的完整链路。</p>
+
+    <div class="arch-diagram">
+      <div class="arch-layer prompt">
+        <div class="layer-label">PROMPT 层 — 你（指挥者）</div>
+        <div class="arch-items">
+          <span class="arch-item">生成主站</span>
+          <span class="arch-item">生成子项目</span>
+          <span class="arch-item">写博客</span>
+          <span class="arch-item">改样式 / 修 BUG</span>
+          <span class="arch-item">配置部署</span>
+        </div>
+      </div>
+      <div class="arch-arrow">&#x25BC;</div>
+      <div class="arch-layer execute">
+        <div class="layer-label">EXECUTION 层 — Claude Code</div>
+        <div class="arch-items">
+          <span class="arch-item">文件创建</span>
+          <span class="arch-item">代码写入</span>
+          <span class="arch-item">配置修复</span>
+          <span class="arch-item">构建检查</span>
+          <span class="arch-item">README 生成</span>
+        </div>
+      </div>
+      <div class="arch-arrow">&#x25BC;</div>
+      <div class="arch-layer deploy">
+        <div class="layer-label">DEPLOY 层 — 自动化</div>
+        <div class="arch-items">
+          <span class="arch-item">git push → GitHub</span>
+          <span class="arch-item">Vercel 自动构建</span>
+          <span class="arch-item">HTTPS + 全球 CDN</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>核心理念</strong>
+      主站通过 Markdown 链接指向子项目 Demo。无代码耦合、无部署依赖、互不影响。每个子项目 = 独立 GitHub 仓库 = 独立 Vercel 部署。
+    </div>
+  </section>
+
+  <!-- ═══ TECH STACK ═══ -->
+  <section class="section" id="tech-stack">
+    <h2>技术栈</h2>
+
+    <div class="tab-group" data-tabs="tech">
+      <button class="tab-btn active" data-tab="frontend">前端框架</button>
+      <button class="tab-btn" data-tab="content">内容系统</button>
+      <button class="tab-btn" data-tab="scripts">脚本工具</button>
+      <button class="tab-btn" data-tab="infra">基础设施</button>
+    </div>
+
+    <div class="tab-content active" data-tabs="tech" data-tab="frontend">
+      <table>
+        <thead><tr><th>技术</th><th>版本</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>Next.js</td><td>14.2</td><td>全栈框架（App Router）</td></tr>
+          <tr><td>React</td><td>18.3</td><td>UI 组件库</td></tr>
+          <tr><td>Tailwind CSS</td><td>3.4</td><td>样式系统（暗黑科技风）</td></tr>
+          <tr><td>TypeScript</td><td>5.0</td><td>类型安全</td></tr>
+          <tr><td>Mermaid</td><td>11.x</td><td>图表渲染</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" data-tabs="tech" data-tab="content">
+      <table>
+        <thead><tr><th>工具</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>gray-matter</td><td>解析 Markdown frontmatter</td></tr>
+          <tr><td>unified / remark / rehype</td><td>Markdown → HTML 渲染管线</td></tr>
+          <tr><td>remark-gfm</td><td>GitHub Flavored Markdown 支持</td></tr>
+          <tr><td>rehype-highlight</td><td>代码语法高亮</td></tr>
+          <tr><td>rehype-slug</td><td>标题自动 ID（用于 TOC）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" data-tabs="tech" data-tab="scripts">
+      <table>
+        <thead><tr><th>脚本</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>scaffold.mjs</td><td>子项目模板脚手架</td></tr>
+          <tr><td>blog-create.mjs</td><td>AI 辅助博客创建（Anthropic API）</td></tr>
+          <tr><td>blog-publish.mjs</td><td>草稿博客发布</td></tr>
+          <tr><td>mermaid-to-svg.mjs</td><td>Mermaid 图表 → SVG 渲染</td></tr>
+          <tr><td>slug.mjs</td><td>中文→拼音 slug 生成工具</td></tr>
+          <tr><td>git-utils.mjs</td><td>Git 安全操作工具</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" data-tabs="tech" data-tab="infra">
+      <table>
+        <thead><tr><th>平台</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>Vercel</td><td>自动部署 + 全球 CDN + HTTPS</td></tr>
+          <tr><td>GitHub Actions</td><td>CI（test + build + lint）</td></tr>
+          <tr><td>Anthropic API</td><td>AI 博客内容生成</td></tr>
+          <tr><td>Jest</td><td>单元测试</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ QUICK START ═══ -->
+  <section class="section" id="quick-start">
+    <h2>快速开始</h2>
+
+    <h3>环境要求</h3>
+    <ul>
+      <li>Node.js 18+</li>
+      <li>npm 9+</li>
+      <li>Git</li>
+      <li><code>ANTHROPIC_API_KEY</code> 环境变量（用于 AI 博客创建）</li>
+    </ul>
+
+    <h3>安装与运行</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Terminal</span>
+      </div>
+      <div class="demo-body">
+        <div class="terminal">
+<span class="prompt">$</span> <span class="cmd">git clone https://github.com/Tian-Zhen-Yin/ccFlow.git</span>
+<span class="prompt">$</span> <span class="cmd">cd ccFlow</span>
+<span class="prompt">$</span> <span class="cmd">npm install</span>
+<span class="output">added 320 packages in 8s</span>
+
+<span class="prompt">$</span> <span class="cmd">npm run dev</span>
+<span class="output">  ▲ Next.js 14.2.0</span>
+<span class="output">  - Local:    http://localhost:3000</span>
+<span class="output">  - Ready in 2.1s</span>
+
+<span class="prompt">$</span> <span class="cmd">npm test</span>
+<span class="success">Tests:       14 passed, 14 total</span>
+
+<span class="prompt">$</span> <span class="cmd">npm run build</span>
+<span class="success">  Generating static pages (13/13)</span>
+<span class="success">  ✓ Compiled successfully</span></div>
+      </div>
+    </div>
+
+    <h3>所有 npm scripts</h3>
+    <table>
+      <thead><tr><th>命令</th><th>用途</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>npm run dev</code></td><td>本地开发</td><td>启动 Next.js 开发服务器</td></tr>
+        <tr><td><code>npm run build</code></td><td>构建</td><td>生成静态页面</td></tr>
+        <tr><td><code>npm start</code></td><td>生产模式</td><td>运行构建后的项目</td></tr>
+        <tr><td><code>npm test</code></td><td>测试</td><td>运行 Jest 测试套件</td></tr>
+        <tr><td><code>npm run lint</code></td><td>代码检查</td><td>ESLint 代码质量检查</td></tr>
+        <tr><td><code>npm run scaffold</code></td><td>脚手架</td><td>创建子项目模板</td></tr>
+        <tr><td><code>npm run blog:create</code></td><td>AI 写博客</td><td>通过 Anthropic API 生成博客</td></tr>
+        <tr><td><code>npm run blog:publish</code></td><td>发布草稿</td><td>将草稿发布到博客列表</td></tr>
+        <tr><td><code>npm run mermaid:build</code></td><td>图表渲染</td><td>将 Mermaid 代码块渲染为 SVG</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ WEBSITE GUIDE ═══ -->
+  <section class="section" id="website-guide">
+    <h2>网站功能导航</h2>
+    <p>主站是一个暗黑科技风的个人作品集网站，包含 6 个页面路由。</p>
+
+    <table>
+      <thead><tr><th>路由</th><th>页面</th><th>渲染策略</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>首页</td><td>SSG</td><td>粒子动画 Hero + 精选项目 + 最新博客</td></tr>
+        <tr><td><code>/projects</code></td><td>作品集列表</td><td>SSG</td><td>项目卡片网格</td></tr>
+        <tr><td><code>/projects/[slug]</code></td><td>项目详情</td><td>ISR (1h)</td><td>项目介绍 + 可嵌入 Demo</td></tr>
+        <tr><td><code>/blog</code></td><td>博客列表</td><td>SSG</td><td>博客文章卡片</td></tr>
+        <tr><td><code>/blog/[slug]</code></td><td>博客详情</td><td>ISR (1h)</td><td>正文 + TOC 侧边栏</td></tr>
+        <tr><td><code>/about</code></td><td>关于</td><td>SSG</td><td>个人简介 + 技术栈展示</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box tip">
+      <strong>SSG vs ISR</strong>
+      列表页使用 SSG（构建时生成），详情页使用 ISR（增量静态再生成，每小时更新一次）。
+    </div>
+
+    <h3>目录结构</h3>
+    <div class="file-tree">
+<span class="dir">ccFlow/</span>
+├── <span class="dir">app/</span>                        <span class="file"># Next.js App Router 页面</span>
+│   ├── page.tsx                <span class="file"># 首页</span>
+│   ├── layout.tsx              <span class="file"># 全局布局</span>
+│   ├── <span class="dir">blog/</span>
+│   │   ├── page.tsx            <span class="file"># 博客列表</span>
+│   │   └── <span class="dir">[slug]/</span>page.tsx  <span class="file"># 博客详情</span>
+│   └── <span class="dir">projects/</span>
+│       ├── page.tsx            <span class="file"># 项目列表</span>
+│       └── <span class="dir">[slug]/</span>page.tsx  <span class="file"># 项目详情</span>
+├── <span class="dir">components/</span>                  <span class="file"># UI 组件</span>
+├── <span class="dir">content/</span>                     <span class="highlight"># Markdown 内容（核心数据目录）</span>
+│   ├── <span class="dir">blogs/</span>                   <span class="file"># 博客 Markdown</span>
+│   ├── <span class="dir">drafts/</span>                  <span class="file"># 博客草稿</span>
+│   └── <span class="dir">projects/</span>               <span class="file"># 项目 Markdown</span>
+├── <span class="dir">lib/</span>                         <span class="file"># 核心库</span>
+├── <span class="dir">scripts/</span>                     <span class="highlight"># CLI 工具脚本</span>
+├── <span class="dir">templates/</span>                   <span class="highlight"># 子项目模板</span>
+└── <span class="dir">public/</span>                      <span class="file"># 静态资源</span></div>
+  </section>
+
+  <!-- ═══ SCAFFOLD ═══ -->
+  <section class="section" id="scaffold">
+    <h2>脚手架命令 <span class="badge cli">CLI</span></h2>
+    <p>使用 <code>npm run scaffold</code> 从模板创建新的子项目，支持 4 种技术栈模板。</p>
+
+    <h3 id="scaffold-usage">基本用法</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">scaffold.mjs 命令格式</span>
+      </div>
+      <div class="demo-body">
+        <div class="terminal">
+<span class="comment"># 基本格式</span>
+<span class="prompt">$</span> <span class="cmd">npm run scaffold -- --name &lt;项目名&gt; --template &lt;模板&gt; --desc &lt;描述&gt;</span>
+
+<span class="comment"># 短参数格式</span>
+<span class="prompt">$</span> <span class="cmd">npm run scaffold -- -n my-project -t nextjs -d "项目描述"</span>
+
+<span class="comment"># 强制覆盖已有目录</span>
+<span class="prompt">$</span> <span class="cmd">npm run scaffold -- -n existing-project -t vanilla --force</span>
+
+<span class="comment"># 不指定模板时，默认使用 nextjs</span>
+<span class="prompt">$</span> <span class="cmd">npm run scaffold -- -n my-app -d "我的应用"</span></div>
+      </div>
+    </div>
+
+    <h4>参数说明</h4>
+    <table>
+      <thead><tr><th>参数</th><th>短参数</th><th>必填</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>--name</code></td><td><code>-n</code></td><td>是</td><td>项目名称（同时作为目录名）</td></tr>
+        <tr><td><code>--template</code></td><td><code>-t</code></td><td>否</td><td>模板类型，默认 <code>nextjs</code></td></tr>
+        <tr><td><code>--desc</code></td><td><code>-d</code></td><td>否</td><td>项目描述</td></tr>
+        <tr><td><code>--force</code></td><td><code>-f</code></td><td>否</td><td>覆盖已有目录</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="scaffold-templates">模板详解</h3>
+    <div class="tab-group" data-tabs="templates">
+      <button class="tab-btn active" data-tab="tpl-nextjs">Next.js</button>
+      <button class="tab-btn" data-tab="tpl-vue">Vue 3</button>
+      <button class="tab-btn" data-tab="tpl-vanilla">Vanilla</button>
+      <button class="tab-btn" data-tab="tpl-node">Node Service</button>
+    </div>
+
+    <div class="tab-content active" data-tabs="templates" data-tab="tpl-nextjs">
+      <h4>Next.js 14 模板 <span class="badge template">nextjs</span></h4>
+      <p>适合 React 全栈应用。</p>
+      <div class="file-tree">
+<span class="dir">templates/nextjs/</span>
+├── <span class="dir">pages/</span>index.js         <span class="file"># 首页组件</span>
+├── next.config.mjs          <span class="file"># Next.js 配置</span>
+├── package.json              <span class="file"># 依赖声明</span>
+├── vercel.json               <span class="file"># Vercel 部署配置</span>
+├── .gitignore
+└── CLAUDE.md                 <span class="highlight"># Claude Code 项目说明</span></div>
+    </div>
+    <div class="tab-content" data-tabs="templates" data-tab="tpl-vue">
+      <h4>Vue 3 + Vite 模板 <span class="badge template">vue3-vite</span></h4>
+      <p>适合 Vue 3 单页应用。</p>
+      <div class="file-tree">
+<span class="dir">templates/vue3-vite/</span>
+├── <span class="dir">src/</span>
+│   ├── main.js               <span class="file"># 入口文件</span>
+│   └── App.vue               <span class="file"># 根组件</span>
+├── index.html                 <span class="file"># HTML 入口</span>
+├── vite.config.js             <span class="file"># Vite 配置</span>
+├── package.json
+├── vercel.json
+└── CLAUDE.md</div>
+    </div>
+    <div class="tab-content" data-tabs="templates" data-tab="tpl-vanilla">
+      <h4>Vanilla JS 模板 <span class="badge template">vanilla</span></h4>
+      <p>纯 HTML + CSS + JS，适合轻量级静态页面。</p>
+      <div class="file-tree">
+<span class="dir">templates/vanilla/</span>
+├── index.html                 <span class="file"># 页面结构</span>
+├── style.css                  <span class="file"># 样式</span>
+├── app.js                     <span class="file"># 脚本</span>
+├── vercel.json
+└── CLAUDE.md</div>
+    </div>
+    <div class="tab-content" data-tabs="templates" data-tab="tpl-node">
+      <h4>Node.js Express 模板 <span class="badge template">node-service</span></h4>
+      <p>Express 后端服务，Vercel Serverless 部署。</p>
+      <div class="file-tree">
+<span class="dir">templates/node-service/</span>
+├── <span class="dir">src/</span>index.js              <span class="file"># Express 服务入口</span>
+├── package.json
+├── vercel.json
+└── CLAUDE.md</div>
+    </div>
+
+    <h3 id="scaffold-demo">交互演示：脚手架创建</h3>
+    <p>输入项目参数，查看模拟输出：</p>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Scaffold 交互演示</span>
+      </div>
+      <div class="demo-body">
+        <div class="scaffold-form">
+          <div>
+            <label>项目名称</label>
+            <input type="text" id="sc-name" value="my-awesome-app">
+          </div>
+          <div>
+            <label>模板类型</label>
+            <select id="sc-template">
+              <option value="nextjs">nextjs — Next.js 14</option>
+              <option value="vue3-vite">vue3-vite — Vue 3 + Vite</option>
+              <option value="vanilla">vanilla — 纯 HTML/JS</option>
+              <option value="node-service">node-service — Express</option>
+            </select>
+          </div>
+          <div class="full-width">
+            <label>项目描述</label>
+            <input type="text" id="sc-desc" value="一个很酷的应用">
+          </div>
+          <div class="full-width">
+            <label><input type="checkbox" id="sc-force"> --force 强制覆盖</label>
+            &nbsp;
+            <button class="btn-primary" onclick="runScaffoldDemo()">运行脚手架</button>
+          </div>
+        </div>
+        <div class="scaffold-output" id="scaffold-output"></div>
+      </div>
+    </div>
+
+    <h4>模板变量替换规则</h4>
+    <table>
+      <thead><tr><th>变量</th><th>替换为</th><th>示例</th></tr></thead>
+      <tbody>
+        <tr><td><code>{{project-name}}</code></td><td>项目名称</td><td>my-awesome-app</td></tr>
+        <tr><td><code>{{description}}</code></td><td>项目描述</td><td>一个很酷的应用</td></tr>
+        <tr><td><code>{{framework}}</code></td><td>框架名称</td><td>Next.js 14</td></tr>
+        <tr><td><code>{{build-tool}}</code></td><td>构建工具</td><td>Vite</td></tr>
+        <tr><td><code>{{year}}</code></td><td>当前年份</td><td>2026</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box tip">
+      <strong>CLAUDE.md 的作用</strong>
+      每个子项目会自动生成 <code>CLAUDE.md</code>，包含技术栈、常用命令、项目定位。在子项目中使用 Claude Code 时，它会自动读取此文件。
+    </div>
+  </section>
+
+  <!-- ═══ BLOG CREATE ═══ -->
+  <section class="section" id="blog-create">
+    <h2>AI 博客创建 <span class="badge cli">CLI</span></h2>
+    <p>通过 Anthropic API（Claude Sonnet）自动生成中文技术博客，一条命令完成从生成到推送。</p>
+
+    <h3>使用方法</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">blog-create.mjs</span>
+      </div>
+      <div class="demo-body">
+        <div class="terminal">
+<span class="comment"># 基本格式</span>
+<span class="prompt">$</span> <span class="cmd">npm run blog:create -- "文章标题" --tags "标签1,标签2"</span>
+
+<span class="comment"># 实际示例</span>
+<span class="prompt">$</span> <span class="cmd">export ANTHROPIC_API_KEY=sk-ant-xxx</span>
+<span class="prompt">$</span> <span class="cmd">npm run blog:create -- "使用 Claude Code 构建微服务" --tags "Claude Code,微服务"</span>
+<span class="output">⏳ AI 生成中...</span>
+<span class="success">✔ 已写入: content/blogs/shi-yong-claude-code-gou-jian-wei-fu-wu.md</span>
+<span class="success">✔ 本地已提交</span>
+<span class="success">✔ 已推送远程，部署中...</span></div>
+      </div>
+    </div>
+
+    <div class="info-box warn">
+      <strong>前置条件</strong>
+      必须设置 <code>ANTHROPIC_API_KEY</code>。推荐：<code>export ANTHROPIC_API_KEY=sk-ant-xxx</code>
+    </div>
+
+    <h3 id="blog-create-workflow">工作流详解</h3>
+    <div class="flow">
+      <div class="flow-step highlight">
+        <div class="step-title">1. 检查工作区</div>
+        <div class="step-desc">git status --porcelain 确保干净</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">2. 生成 Slug</div>
+        <div class="step-desc">标题 → 拼音/英文 URL 标识</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step highlight">
+        <div class="step-title">3. 调用 Anthropic API</div>
+        <div class="step-desc">Claude Sonnet 生成 800-1500 字中文博客</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">4. 清洗响应</div>
+        <div class="step-desc">剥离 ```markdown、闲聊前缀</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">5. 组装 + 写入</div>
+        <div class="step-desc">Frontmatter + 正文 → content/blogs/</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">6. Git Commit + Push</div>
+        <div class="step-desc">自动提交推送（推送失败不阻塞）</div>
+      </div>
+    </div>
+
+    <h3 id="blog-create-demo">交互演示</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Blog Create 模拟</span>
+      </div>
+      <div class="demo-body">
+        <div class="scaffold-form">
+          <div class="full-width">
+            <label>博客标题</label>
+            <input type="text" id="bc-title" value="用 Next.js 构建全栈应用">
+          </div>
+          <div class="full-width">
+            <label>标签（逗号分隔）</label>
+            <input type="text" id="bc-tags" value="Next.js,React,全栈">
+          </div>
+          <div class="full-width">
+            <button class="btn-primary" onclick="runBlogCreateDemo()">模拟创建</button>
+          </div>
+        </div>
+        <div class="scaffold-output" id="blog-create-output"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BLOG PUBLISH ═══ -->
+  <section class="section" id="blog-publish">
+    <h2>草稿发布 <span class="badge cli">CLI</span></h2>
+    <p>将 <code>content/drafts/</code> 中的草稿正式发布到博客列表。</p>
+
+    <h3>使用方法</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">blog-publish.mjs</span>
+      </div>
+      <div class="demo-body">
+        <div class="terminal">
+<span class="prompt">$</span> <span class="cmd">npm run blog:publish -- ./content/drafts/my-draft.md</span>
+<span class="success">✔ 已发布: content/blogs/wo-de-di-yi-pian-bo-ke.md</span>
+<span class="success">✔ 本地已提交</span>
+<span class="success">✔ 已推送远程，部署中...</span></div>
+      </div>
+    </div>
+
+    <h4>草稿格式支持</h4>
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>格式一：带 Frontmatter</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <pre><code>---
+title: "验证博客发布"
+slug: yan-zheng-bo-ke-fa-bu
+date: 2026-05-22
+tags: 测试,发布
+---
+
+## 验证博客发布功能
+
+这是一篇测试草稿...</code></pre>
+        </div></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>格式二：纯 Markdown（无 Frontmatter）</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <pre><code># 我的博客文章
+
+这是纯 Markdown 格式的草稿。
+标题从第一个 # 标题自动提取，
+slug 从标题自动生成。</code></pre>
+        </div></div>
+      </div>
+    </div>
+
+    <h3 id="blog-publish-demo">交互演示</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Blog Publish 模拟</span>
+      </div>
+      <div class="demo-body">
+        <div class="scaffold-form">
+          <div class="full-width">
+            <label>草稿文件路径</label>
+            <input type="text" id="bp-path" value="./content/drafts/my-draft.md">
+          </div>
+          <div class="full-width">
+            <button class="btn-primary" onclick="runBlogPublishDemo()">模拟发布</button>
+          </div>
+        </div>
+        <div class="scaffold-output" id="blog-publish-output"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLUG SYSTEM ═══ -->
+  <section class="section" id="slug-system">
+    <h2>Slug 生成系统</h2>
+    <p>内置中文→拼音 slug 转换器，确保 URL 友好且不使用 <code>%XX%XX</code> 编码。</p>
+
+    <h3>转换规则</h3>
+    <table>
+      <thead><tr><th>输入类型</th><th>规则</th><th>示例</th></tr></thead>
+      <tbody>
+        <tr><td>中文标题</td><td>每个字 → 拼音全拼 + 连字符</td><td><code>我的第一篇博客</code> → <code>wo-de-di-yi-pian-bo-ke</code></td></tr>
+        <tr><td>英文标题</td><td>小写 + 空格→连字符 + 去除特殊字符</td><td><code>Hello World!</code> → <code>hello-world</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box danger">
+      <strong>禁止行为</strong>
+      不允许使用 <code>encodeURIComponent</code> 生成编码形式的 slug。所有中文必须转换为拼音。
+    </div>
+
+    <h3 id="slug-demo">交互演示：Slug 生成器</h3>
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Slug Generator</span>
+      </div>
+      <div class="demo-body">
+        <div class="slug-demo">
+          <div>
+            <label style="font-size:13px;color:var(--text-muted)">输入标题</label>
+            <input type="text" id="slug-input" placeholder="试试输入中文或英文标题..." oninput="updateSlug()">
+          </div>
+          <div class="result">
+            <span style="color:var(--text-muted)">Slug:</span>
+            <span class="arrow">→</span>
+            <span class="output" id="slug-output">（输入标题后自动生成）</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:var(--text-muted);">
+          快速试试：
+          <button class="btn-primary" style="padding:4px 12px;font-size:12px;margin:2px" onclick="setSlug('我的第一篇博客')">我的第一篇博客</button>
+          <button class="btn-primary" style="padding:4px 12px;font-size:12px;margin:2px" onclick="setSlug('配置部署指南')">配置部署指南</button>
+          <button class="btn-primary" style="padding:4px 12px;font-size:12px;margin:2px" onclick="setSlug('Hello World Tutorial')">Hello World Tutorial</button>
+          <button class="btn-primary" style="padding:4px 12px;font-size:12px;margin:2px" onclick="setSlug('数据库优化实践')">数据库优化实践</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTENT SYSTEM ═══ -->
+  <section class="section" id="content-system">
+    <h2>内容管理系统</h2>
+    <p>纯 Markdown 文件管理所有内容，零数据库依赖。</p>
+
+    <h3>项目内容格式</h3>
+    <pre><code><span class="code-label">content/projects/xxx.md</span>---
+title: "项目名称"
+slug: project-slug
+description: "项目描述"
+tech:
+  - Next.js
+  - TypeScript
+status: "online"          <span style="color:#6A9955"># online | dev | archived</span>
+featured: true
+github: "https://github.com/..."
+demo: "https://xxx.vercel.app"
+demoEmbed: false
+order: 1
+---
+
+## 项目简介
+Markdown 正文...</code></pre>
+
+    <h3>博客内容格式</h3>
+    <pre><code><span class="code-label">content/blogs/xxx.md</span>---
+title: "博客标题"
+slug: blog-slug
+date: 2026-05-22
+tags:
+  - 标签1
+  - 标签2
+published: true
+readingTime: 15
+---
+
+## 正文标题
+Markdown 正文...</code></pre>
+
+    <h3>Markdown 渲染管线</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-title">gray-matter</div>
+        <div class="step-desc">解析 YAML frontmatter</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">remark-parse + gfm</div>
+        <div class="step-desc">Markdown → AST</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">remark-mermaid</div>
+        <div class="step-desc">Mermaid 块 → div</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">rehype-slug + highlight</div>
+        <div class="step-desc">AST → HTML + 高亮</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-title">rehype-stringify</div>
+        <div class="step-desc">最终 HTML 字符串</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GIT WORKFLOW ═══ -->
+  <section class="section" id="git-workflow">
+    <h2>Git 安全工作流</h2>
+    <p>所有脚本共享 <code>git-utils.mjs</code> 中的安全 Git 操作。</p>
+
+    <div class="workflow">
+      <div class="workflow-card">
+        <div class="num">1</div>
+        <h4>前置检查</h4>
+        <p>git status --porcelain<br>确保工作区干净</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">2</div>
+        <h4>写入文件</h4>
+        <p>content/blogs/&lt;slug&gt;.md<br>或 scaffold 目录</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">3</div>
+        <h4>Stage + Commit</h4>
+        <p>git add -- file<br>git commit -m "msg"</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">4</div>
+        <h4>安全推送</h4>
+        <p>try/catch 包裹<br>失败降级提示</p>
+      </div>
+    </div>
+
+    <div class="info-box success">
+      <strong>降级策略</strong>
+      Push 失败时不抛异常：<code>✔ 博客已在本地生成并提交，但远程推送失败，请手动执行 git push</code>
+    </div>
+  </section>
+
+  <!-- ═══ MERMAID ═══ -->
+  <section class="section" id="mermaid">
+    <h2>Mermaid 图表系统</h2>
+    <p>支持在 Markdown 中使用 Mermaid 语法。</p>
+
+    <h3>使用方式</h3>
+    <pre><code><span class="code-label">Markdown 中使用</span>```mermaid
+graph LR
+    A[用户输入] --> B(Claude Code)
+    B --> C{代码生成}
+    C -->|成功| D[Git Push]
+    D --> F[Vercel 部署]
+```</code></pre>
+
+    <div class="tab-group" data-tabs="mermaid">
+      <button class="tab-btn active" data-tab="mm-client">客户端渲染（默认）</button>
+      <button class="tab-btn" data-tab="mm-static">静态 SVG（可选）</button>
+    </div>
+
+    <div class="tab-content active" data-tabs="mermaid" data-tab="mm-client">
+      <p><code>MarkdownRenderer.tsx</code> 在浏览器中自动渲染 Mermaid 图表，使用暗黑科技风主题。</p>
+    </div>
+    <div class="tab-content" data-tabs="mermaid" data-tab="mm-static">
+      <pre><code><span class="prompt">$</span> <span class="cmd">npm run mermaid:build</span>
+<span class="output"># 扫描 content/**/*.md 中的 ```mermaid 块</span>
+<span class="output"># 渲染为 SVG → public/images/generated-svg/{slug}-chart-{N}.svg</span>
+<span class="output"># 附加赛博网格背景 + 霓虹发光滤镜</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ═══ TESTING ═══ -->
+  <section class="section" id="testing">
+    <h2>测试与构建</h2>
+    <table>
+      <thead><tr><th>测试文件</th><th>覆盖范围</th></tr></thead>
+      <tbody>
+        <tr><td><code>__tests__/lib/markdown.test.ts</code></td><td>parseMarkdown + extractHeadings</td></tr>
+        <tr><td><code>__tests__/lib/content.test.ts</code></td><td>getProjects / getBlogs / getBySlug</td></tr>
+        <tr><td><code>__tests__/components/Navbar.test.tsx</code></td><td>导航栏渲染 + 移动端菜单</td></tr>
+      </tbody>
+    </table>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="title">Test Output</span>
+      </div>
+      <div class="demo-body">
+        <div class="terminal">
+<span class="prompt">$</span> <span class="cmd">npm test</span>
+
+<span class="success"> PASS  __tests__/lib/markdown.test.ts</span>
+<span class="success">  ✓ parseMarkdown: extracts frontmatter</span>
+<span class="success">  ✓ parseMarkdown: converts to HTML</span>
+<span class="success">  ✓ parseMarkdown: highlights code blocks</span>
+<span class="success">  ✓ extractHeadings: returns h2 and h3</span>
+
+<span class="success"> PASS  __tests__/lib/content.test.ts</span>
+<span class="success">  ✓ getProjects: returns all projects</span>
+<span class="success">  ✓ getBlogs: filters unpublished</span>
+<span class="success">  ✓ getBlogs: sorts by date descending</span>
+<span class="success">  ✓ getProjectBySlug: returns null for missing</span>
+<span class="success">  ✓ getBlogBySlug: returns detail with headings</span>
+
+<span class="success"> PASS  __tests__/components/Navbar.test.tsx</span>
+<span class="success">  ✓ renders logo</span>
+<span class="success">  ✓ renders all nav links</span>
+<span class="success">  ✓ renders mobile menu button</span>
+
+<span class="success">Tests: 14 passed, 14 total</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DEPLOYMENT ═══ -->
+  <section class="section" id="deployment">
+    <h2>部署</h2>
+    <div class="workflow">
+      <div class="workflow-card">
+        <div class="num">1</div>
+        <h4>git push</h4>
+        <p>代码推送到 GitHub</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">2</div>
+        <h4>Webhook</h4>
+        <p>Vercel 检测 push</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">3</div>
+        <h4>构建</h4>
+        <p>npm run build</p>
+      </div>
+      <div class="workflow-card">
+        <div class="num">4</div>
+        <h4>部署</h4>
+        <p>HTTPS + CDN</p>
+      </div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>创建子项目并部署</strong>
+    </div>
+    <pre><code>npm run scaffold -- -n my-project -t nextjs -d "我的项目"
+cd my-project
+npm install
+git init && git add .
+gh repo create my-project --public --push
+<span style="color:#6A9955"># 在 Vercel 控制台导入新仓库即可</span></code></pre>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="section" id="faq">
+    <h2>常见问题</h2>
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>API Key 在哪里配置？</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <pre><code>export ANTHROPIC_API_KEY=sk-ant-xxx</code></pre>
+          <p>写入 <code>~/.zshrc</code> 永久生效，或临时使用 <code>ANTHROPIC_API_KEY=xxx npm run blog:create -- "标题"</code></p>
+        </div></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>工作区不干净时怎么办？</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <pre><code># 提交当前变更
+git add -A && git commit -m "wip: save current progress"
+
+# 或暂存
+git stash
+npm run blog:create -- "标题"
+git stash pop</code></pre>
+        </div></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>中文 Slug 不准确怎么办？</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <ol>
+            <li>在 <code>scripts/lib/slug.mjs</code> 的 <code>PY_MAP</code> 中添加映射</li>
+            <li>或在 frontmatter 中手动指定 <code>slug: my-custom-slug</code></li>
+          </ol>
+        </div></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Push 失败后如何手动推送？</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <pre><code>git push
+# 或
+git pull --rebase && git push</code></pre>
+        </div></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>如何添加新的模板类型？</span>
+          <span class="icon">&#x25BC;</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <ol>
+            <li>在 <code>templates/</code> 下创建新目录</li>
+            <li>放入模板文件，使用 <code>{{project-name}}</code> 等占位变量</li>
+            <li>在 <code>scaffold.mjs</code> 的 <code>VALID_TEMPLATES</code> 和 <code>meta</code> 中添加映射</li>
+          </ol>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CLI REF ═══ -->
+  <section class="section" id="cli-ref">
+    <h2>命令速查表</h2>
+    <table>
+      <thead><tr><th>场景</th><th>命令</th></tr></thead>
+      <tbody>
+        <tr><td>本地开发</td><td><code>npm run dev</code></td></tr>
+        <tr><td>运行测试</td><td><code>npm test</code></td></tr>
+        <tr><td>构建项目</td><td><code>npm run build</code></td></tr>
+        <tr><td>创建 Next.js 子项目</td><td><code>npm run scaffold -- -n my-app -d "描述"</code></td></tr>
+        <tr><td>创建 Vue 3 子项目</td><td><code>npm run scaffold -- -n my-app -t vue3-vite</code></td></tr>
+        <tr><td>创建纯静态子项目</td><td><code>npm run scaffold -- -n my-app -t vanilla</code></td></tr>
+        <tr><td>创建 Node 服务</td><td><code>npm run scaffold -- -n my-api -t node-service</code></td></tr>
+        <tr><td>覆盖已有项目</td><td><code>npm run scaffold -- -n my-app --force</code></td></tr>
+        <tr><td>AI 创建博客</td><td><code>npm run blog:create -- "标题" --tags "标签1,标签2"</code></td></tr>
+        <tr><td>发布草稿</td><td><code>npm run blog:publish -- ./content/drafts/xxx.md</code></td></tr>
+        <tr><td>渲染 Mermaid 图表</td><td><code>npm run mermaid:build</code></td></tr>
+        <tr><td>代码检查</td><td><code>npm run lint</code></td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center;margin-top:60px;padding:40px;border-top:1px solid var(--border);">
+      <p style="color:var(--text-muted);font-size:14px;">ccFlow v0.1.0 · PangHu · 用代码构建未来，探索无限可能</p>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:8px;">Powered by Claude Code + Next.js + Vercel</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
+
+<script>
+// ── Tab System ──
+document.querySelectorAll('.tab-group').forEach(group => {
+  const groupId = group.dataset.tabs;
+  group.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll(`.tab-content[data-tabs="${groupId}"]`).forEach(c => {
+        c.classList.toggle('active', c.dataset.tab === btn.dataset.tab);
+      });
+    });
+  });
+});
+
+// ── Accordion ──
+function toggleAccordion(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+// ── Scroll to Top ──
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── Sidebar Active Link ──
+const sections = document.querySelectorAll('.section, .hero');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (s.offsetTop - 100 <= window.scrollY) current = s.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+
+// ── Slug Generator (mirrors scripts/lib/slug.mjs) ──
+const PY_MAP = {
+  '我':'wo','的':'de','第':'di','一':'yi','篇':'pian','博':'bo','客':'ke','文':'wen','章':'zhang',
+  '发':'fa','布':'bu','测':'ce','试':'shi','新':'xin','项':'xiang','目':'mu','使':'shi','用':'yong',
+  '中':'zhong','国':'guo','人':'ren','大':'da','小':'xiao','上':'shang','下':'xia','开':'kai',
+  '关':'guan','更':'geng','修':'xiu','改':'gai','添':'tian','加':'jia','删':'shan','除':'chu',
+  '查':'cha','看':'kan','入':'ru','门':'men','指':'zhi','南':'nan','教':'jiao','程':'cheng',
+  '实':'shi','践':'jian','总':'zong','结':'jie','分':'fen','享':'xiang','配':'pei','置':'zhi',
+  '部':'bu','署':'shu','构':'gou','建':'jian','缓':'huan','存':'cun','版':'ban','本':'ben',
+  '权':'quan','验':'yan','证':'zheng','数':'shu','据':'ju','库':'ku','服':'fu','务':'wu',
+  '器':'qi','管':'guan','理':'li','系':'xi','统':'tong','接':'jie','口':'kou','模':'mo',
+  '块':'kuai','组':'zu','件':'jian','页':'ye','面':'mian','标':'biao','签':'qian','错':'cuo',
+  '误':'wu','信':'xin','息':'xi','网':'wang','站':'zhan','地':'di','址':'zhi','名':'ming',
+  '称':'cheng','高':'gao','性':'xing','能':'neng','优':'you','化':'hua','安':'an','全':'quan',
+  '备':'bei','份':'fen','恢':'hui','复':'fu','监':'jian','控':'kong','日':'ri','志':'zhi',
+  '应':'ying','用':'yong','微':'wei','栈':'zhan','流':'liu','引':'yin','擎':'qing',
+  '核':'he','心':'xin','代':'dai','码':'ma','编':'bian','辑':'ji','运':'yun','行':'xing',
+  '环':'huan','境':'jing','设':'she','计':'ji','算':'suan','法':'fa',
+};
+
+function generateSlug(text) {
+  if (!text || !text.trim()) return '';
+  const trimmed = text.trim();
+  const hasChinese = /[一-鿿]/.test(trimmed);
+  if (hasChinese) {
+    const result = trimmed.split('').map(ch => {
+      if (PY_MAP[ch]) return PY_MAP[ch];
+      if (/[a-zA-Z0-9]/.test(ch)) return ch;
+      return ' ';
+    }).join(' ');
+    return result.replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+  }
+  return trimmed.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+}
+
+function updateSlug() {
+  const input = document.getElementById('slug-input').value;
+  const output = document.getElementById('slug-output');
+  const slug = generateSlug(input);
+  output.textContent = slug || '（输入标题后自动生成）';
+}
+
+function setSlug(text) {
+  document.getElementById('slug-input').value = text;
+  updateSlug();
+}
+
+// ── Scaffold Demo ──
+function runScaffoldDemo() {
+  const name = document.getElementById('sc-name').value || 'my-project';
+  const template = document.getElementById('sc-template').value;
+  const desc = document.getElementById('sc-desc').value || '';
+  const force = document.getElementById('sc-force').checked;
+
+  const meta = {
+    'nextjs': { fw: 'Next.js 14', build: 'Next.js (built-in)', files: ['pages/index.js', 'next.config.mjs', 'package.json', 'vercel.json', 'CLAUDE.md', '.gitignore'] },
+    'vue3-vite': { fw: 'Vue 3', build: 'Vite', files: ['index.html', 'src/main.js', 'src/App.vue', 'vite.config.js', 'package.json', 'vercel.json', 'CLAUDE.md'] },
+    'vanilla': { fw: '无 (Vanilla JS)', build: '无', files: ['index.html', 'style.css', 'app.js', 'vercel.json', 'CLAUDE.md'] },
+    'node-service': { fw: 'Express (Node.js)', build: '无', files: ['src/index.js', 'package.json', 'vercel.json', 'CLAUDE.md'] },
+  }[template];
+
+  const cmd = force
+    ? `npm run scaffold -- -n ${name} -t ${template} -d "${desc}" --force`
+    : `npm run scaffold -- -n ${name} -t ${template} -d "${desc}"`;
+
+  const el = document.getElementById('scaffold-output');
+  el.innerHTML =
+`\x1b[32m$\x1b[0m ${cmd}
+
+\x1b[32m✔ 项目 ${name} 已创建，使用 ${template} 模板\x1b[0m
+
+下一步：
+  cd ${name}
+  npm install
+  git init && git add .
+  gh repo create ${name} --public --push
+
+# 生成文件 (${meta.files.length} 个)：
+${meta.files.map(f => '  ' + f).join('\n')}
+
+# CLAUDE.md: ${name} / ${meta.fw} / ${meta.build} / Vercel`;
+  el.innerHTML = el.innerHTML.replace(/\x1b\[32m/g, '<span style="color:#4ADE80">').replace(/\x1b\[0m/g, '</span>');
+  el.classList.add('visible');
+}
+
+// ── Blog Create Demo ──
+function runBlogCreateDemo() {
+  const title = document.getElementById('bc-title').value || '测试博客';
+  const tags = document.getElementById('bc-tags').value || '';
+  const slug = generateSlug(title);
+  const date = new Date().toISOString().split('T')[0];
+  const tagsYaml = tags ? tags.split(',').map(t => '  - ' + t.trim()).join('\n') : ' []';
+  const el = document.getElementById('blog-create-output');
+  el.innerHTML =
+`<span style="color:#4ADE80">$</span> <span style="color:#E8E8ED">npm run blog:create -- "${title}" --tags "${tags}"</span>
+
+<span style="color:#FBBF24">⏳ AI 生成中...</span>
+<span style="color:#4ADE80">✔ 已写入: content/blogs/${slug}.md</span>
+<span style="color:#4ADE80">✔ 本地已提交</span>
+<span style="color:#4ADE80">✔ 已推送远程，部署中...</span>
+
+<span style="color:#9999AA"># ── 生成的文件内容 ──</span>
+<span style="color:#6C63FF">---</span>
+title: "${title}"
+slug: ${slug}
+date: ${date}
+published: true
+tags:
+${tagsYaml}
+<span style="color:#6C63FF">---</span>
+
+## 正文标题
+（AI 生成的 ${Math.floor(Math.random()*700+800)} 字中文技术博客内容...）`;
+  el.classList.add('visible');
+}
+
+// ── Blog Publish Demo ──
+function runBlogPublishDemo() {
+  const path = document.getElementById('bp-path').value || './content/drafts/my-draft.md';
+  const el = document.getElementById('blog-publish-output');
+  el.innerHTML =
+`<span style="color:#4ADE80">$</span> <span style="color:#E8E8ED">npm run blog:publish -- ${path}</span>
+
+<span style="color:#9999AA"># 1. 检查工作区...</span>
+<span style="color:#4ADE80">✔ 工作区干净</span>
+
+<span style="color:#9999AA"># 2. 解析草稿...</span>
+<span style="color:#4ADE80">✔ 提取标题: "我的博客文章"</span>
+<span style="color:#4ADE80">✔ 生成 slug: my-blog-post</span>
+
+<span style="color:#9999AA"># 3. 组装 + 写入</span>
+<span style="color:#4ADE80">✔ 已发布: content/blogs/my-blog-post.md</span>
+
+<span style="color:#9999AA"># 4. Git 操作</span>
+<span style="color:#4ADE80">✔ 本地已提交</span>
+<span style="color:#4ADE80">✔ 已推送远程，部署中...</span>`;
+  el.classList.add('visible');
+}
+</script>
+
+</body>
+</html>

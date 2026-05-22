@@ -3,7 +3,7 @@ import { execSync } from 'node:child_process';
 
 /**
  * 检查工作区是否干净。
- * 返回 { clean: boolean, dirtyFiles: string[] }
+ * 返回 { clean: boolean, dirtyFiles: string[], error?: string }
  */
 export function checkWorkingTree() {
   try {
@@ -21,7 +21,7 @@ export function checkWorkingTree() {
  */
 export function safeCommit(files, message) {
   try {
-    execSync(`git add ${files}`, { encoding: 'utf-8', cwd: process.cwd(), stdio: 'pipe' });
+    execSync(`git add -- "${files.replace(/"/g, '\\"')}"`, { encoding: 'utf-8', cwd: process.cwd(), stdio: 'pipe' });
     execSync(`git commit -m "${message.replace(/"/g, '\\"')}"`, { encoding: 'utf-8', cwd: process.cwd(), stdio: 'pipe' });
     return { success: true };
   } catch (err) {

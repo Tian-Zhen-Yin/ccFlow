@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getProjectBySlug, getProjects } from '@/lib/content'
+import ErrorBoundary from '@/components/ui/ErrorBoundary'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import TechTag from '@/components/ui/TechTag'
 import ScrollReveal from '@/components/ui/ScrollReveal'
@@ -95,7 +96,9 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
           )}
 
           <div className="border-t border-border pt-8">
-            <MarkdownRenderer content={project.content} />
+            <ErrorBoundary>
+              <MarkdownRenderer content={project.content} />
+            </ErrorBoundary>
           </div>
         </ScrollReveal>
       </div>

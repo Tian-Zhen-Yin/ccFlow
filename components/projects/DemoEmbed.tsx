@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface DemoEmbedProps {
   url: string
@@ -9,6 +9,7 @@ interface DemoEmbedProps {
 
 export default function DemoEmbed({ url, title }: DemoEmbedProps) {
   const [isLoading, setIsLoading] = useState(true)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   return (
     <div className="mt-8">
@@ -17,8 +18,7 @@ export default function DemoEmbed({ url, title }: DemoEmbedProps) {
         <div className="flex gap-3">
           <button
             onClick={() => {
-              const iframe = document.querySelector('iframe')
-              if (iframe?.requestFullscreen) iframe.requestFullscreen()
+              if (iframeRef.current?.requestFullscreen) iframeRef.current.requestFullscreen()
             }}
             className="text-sm text-text-secondary hover:text-primary transition-colors"
           >
@@ -41,6 +41,7 @@ export default function DemoEmbed({ url, title }: DemoEmbedProps) {
           </div>
         )}
         <iframe
+          ref={iframeRef}
           src={url}
           title={title}
           className="w-full h-full border-0"

@@ -18,9 +18,12 @@ export async function getProjects(): Promise<Project[]> {
 
   for (const raw of files) {
     const { frontmatter } = await parseMarkdown(raw)
+    const slug = String(frontmatter.slug ?? '')
+    if (!slug) continue
+
     projects.push({
       title: String(frontmatter.title ?? ''),
-      slug: String(frontmatter.slug ?? ''),
+      slug,
       description: String(frontmatter.description ?? ''),
       tech: Array.isArray(frontmatter.tech) ? frontmatter.tech as string[] : [],
       status: (frontmatter.status as Project['status']) ?? 'dev',

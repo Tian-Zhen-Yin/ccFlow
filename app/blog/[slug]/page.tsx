@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getBlogBySlug, getBlogs } from '@/lib/content'
+import ErrorBoundary from '@/components/ui/ErrorBoundary'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import type { Metadata } from 'next'
@@ -81,8 +82,10 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
         </ScrollReveal>
 
         <div className="border-t border-border pt-8">
-          <MarkdownRenderer content={blog.content} />
-        </div>
+            <ErrorBoundary>
+              <MarkdownRenderer content={blog.content} />
+            </ErrorBoundary>
+          </div>
       </div>
     </article>
   )

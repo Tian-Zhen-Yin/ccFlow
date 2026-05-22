@@ -1,0 +1,12 @@
+{
+  "name": "{{project-name}}",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

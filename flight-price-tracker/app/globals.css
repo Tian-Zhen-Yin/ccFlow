@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a1a;
+  --color-surface: #12122a;
+  --color-border: rgba(139, 92, 246, 0.15);
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #7c3aed;
+  --color-text-primary: #e8e8f0;
+  --color-text-secondary: #a0a0b8;
+  --color-text-muted: #6b6b80;
+  --color-accent: #06b6d4;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }

@@ -5,3 +5,4 @@ node_modules
 # Puppeteer scraper debug artifacts
 data/debug/
 data/scraper.log
+.vercel

@@ -2,10 +2,17 @@ import type { FlightPass } from '@/lib/types'
 import { readFileSync, existsSync } from 'fs'
 import path from 'path'
 
+function isDev(): boolean {
+  return process.env.NODE_ENV === 'development'
+}
+
 /**
  * Read locally scraped flight pass data from the data/ directory.
+ * Only used in development — production uses curated data (or API).
  */
 function readLocalPassData(): FlightPass[] | null {
+  if (!isDev()) return null
+
   try {
     const filePath = path.join(process.cwd(), 'data', 'flight-passes.json')
     if (!existsSync(filePath)) return null
